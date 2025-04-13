@@ -1,9 +1,12 @@
 ﻿@page "/counter"
+@using BlazorApp.Services
 @rendermode InteractiveServer
+@inject SampleService SampleService;
 
 <PageTitle>Counter</PageTitle>
 
 <h1>Counter</h1>
+<h2>Hello, @SampleService.ChangedName("taira")</h2>
 
 <p role="status">Current count: @currentCount</p>
 
@@ -11,6 +14,9 @@
 
 @code {
     private int currentCount = 0;
+
+    [Parameter]
+    public string name { get; set; } = "User";
 
     [Parameter]
     public int IncrementAmount { get; set; } = 1;
