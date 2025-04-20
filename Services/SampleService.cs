@@ -1,10 +1,10 @@
 namespace BlazorApp.Services
 {
-  public class SampleService
-  {
-    public string ChangedName(string changedName)
+    public class SampleService
     {
-      return changedName;
+        public string ChangedName(string changedName)
+        {
+            return changedName;
+        }
     }
-  }
 }
