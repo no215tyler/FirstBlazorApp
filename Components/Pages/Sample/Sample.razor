@@ -1,0 +1,43 @@
+﻿@page "/sample"
+<h3>名前でユーザーをフィルタリング</h3>
+<div class="main-container">
+    <div class="condisions">
+        <h4><b>要件</b></h4>
+        <ul>
+            <li>LINQ（Where）を使用すること</li>
+            <li>名前に小文字の「a」を含むユーザーのみを対象にする（Name.Contains("a")）</li>
+            <li>Razorページ上でフィルタリング結果を表示すること（foreachなど）</li>
+        </ul>
+    </div>
+    <h4><b>結果</b></h4>
+    @foreach (User user in filterUsers)
+    {
+        <p>@user.Name</p>
+    }
+</div>
+
+
+@code {
+    private User[] filterUsers = Array.Empty<User>();
+    protected override void OnInitialized()
+    {
+        List<User> users = new()
+{
+new User { Id = 1, Name = "Alice" },
+new User { Id = 2, Name = "Bob" },
+new User { Id = 3, Name = "Charlie" },
+new User { Id = 4, Name = "David" },
+new User { Id = 5, Name = "Eve" }
+};
+
+        filterUsers = users
+        .Where(u => u.Name.Contains("a")).ToArray();
+
+    }
+
+    public class User
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+    }
+}
