@@ -12,15 +12,15 @@
         </ul>
     </div>
     <h4><b>結果</b></h4>
-    @foreach (string userName in filterUsers)
+    @foreach (User user in filterUsers)
     {
-        <p>@userName</p>
+        <p>【Name】@user.Name<br>【Age】@user.Age</p>
     }
 </div>
 
 
 @code {
-    private String[] filterUsers = Array.Empty<String>();
+    private List<User> filterUsers = new();
     protected override void OnInitialized()
     {
         List<User> users = new()
@@ -34,9 +34,9 @@ new User { Id = 5, Name = "Eve", Age = 35 }
 
 
         filterUsers = users
-        .OrderBy(u => u.Age)
-        .Select(u => u.Name)
-        .ToArray();
+        .OrderBy(u => u.Age).ToList();
+
+
 
     }
 
