@@ -1,37 +1,42 @@
 ﻿@page "/sample"
-<h3>名前でユーザーをフィルタリング</h3>
+<h3>【年齢順に並べて名前だけを表示】</h3>
 <div class="main-container">
     <div class="condisions">
         <h4><b>要件</b></h4>
         <ul>
-            <li>LINQ（Where）を使用すること</li>
-            <li>名前に小文字の「a」を含むユーザーのみを対象にする（Name.Contains("a")）</li>
-            <li>Razorページ上でフィルタリング結果を表示すること（foreachなど）</li>
+            <li>LINQのOrderByで年齢の昇順に並べる</li>
+            <li>Selectで名前のみを抽出する</li>
+            <li>Razorページで名前一覧を表示する（@@foreach）</li>
+            <li>クラス・初期化処理はOnInitialized()内で行う</li>
+            <li>List&lt;string&gt;やstring[]で名前だけを格納してもOK</li>
         </ul>
     </div>
     <h4><b>結果</b></h4>
-    @foreach (User user in filterUsers)
+    @foreach (string userName in filterUsers)
     {
-        <p>@user.Name</p>
+        <p>@userName</p>
     }
 </div>
 
 
 @code {
-    private User[] filterUsers = Array.Empty<User>();
+    private String[] filterUsers = Array.Empty<String>();
     protected override void OnInitialized()
     {
         List<User> users = new()
 {
-new User { Id = 1, Name = "Alice" },
-new User { Id = 2, Name = "Bob" },
-new User { Id = 3, Name = "Charlie" },
-new User { Id = 4, Name = "David" },
-new User { Id = 5, Name = "Eve" }
+new User { Id = 1, Name = "Alice", Age = 32 },
+new User { Id = 2, Name = "Bob", Age = 28 },
+new User { Id = 3, Name = "Charlie", Age = 45 },
+new User { Id = 4, Name = "David", Age = 23 },
+new User { Id = 5, Name = "Eve", Age = 35 }
 };
 
+
         filterUsers = users
-        .Where(u => u.Name.Contains("a")).ToArray();
+        .OrderBy(u => u.Age)
+        .Select(u => u.Name)
+        .ToArray();
 
     }
 
@@ -39,5 +44,7 @@ new User { Id = 5, Name = "Eve" }
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
+        public int Age { get; set; }
     }
+
 }
