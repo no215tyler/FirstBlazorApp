@@ -1,8 +1,15 @@
 ﻿@page "/sample"
 @inject IJSRuntime JS
 @rendermode InteractiveServer
-<h3>【ユーザーの追加と表示】</h3>
+<h3>【GroupByの実演】</h3>
 <div class="main-container">
+    <h4><b>要件</b></h4>
+    <ul>
+        <li>LINQの GroupBy を使用して年齢層で分類する</li>
+        <li>各年齢層（10代、20代、30代、40代）ごとにユーザーを表示する</li>
+        <li>Razorページに表示（見出しごとに分けて）</li>
+        <li>グループのキー（「10代」など）を表示する</li>
+    </ul>
     <div>
         <label>【Name】</label>
         <input @bind="newUserName" />
@@ -13,10 +20,14 @@
     </div>
     <button type="button" @onclick="AddUser">Add User</button>
 
-    <h4><b>登録済みユーザー一覧（年齢順）</b></h4>
-    @foreach (User user in users.OrderBy(u => u.Age))
+    <h4><b>登録済みユーザー一覧（年代別）</b></h4>
+    @foreach (var group in GroupedUsers)
     {
-        <p>【Name】@user.Name<br>【Age】@user.Age 歳</p>
+        <h5>@group.Key</h5>
+        @foreach (User user in group)
+        {
+            <p>【Name】@user.Name<br>【Age】@user.Age 歳</p>
+        }
     }
 
 </div>
@@ -26,16 +37,23 @@
     private string newUserName = string.Empty;
     private int newUserAge;
     private List<User> users = new List<User>();
+    private IEnumerable<IGrouping<string, User>> GroupedUsers => users
+    .GroupBy(u => GetAgeGroup(u.Age))
+    .OrderBy(u => u.Key);
+
     protected override void OnInitialized()
     {
-        users = new List<User>
+        users = new List<User>()
 {
 new User { Id = 1, Name = "Alice", Age = 32 },
 new User { Id = 2, Name = "Bob", Age = 28 },
 new User { Id = 3, Name = "Charlie", Age = 45 },
 new User { Id = 4, Name = "David", Age = 23 },
-new User { Id = 5, Name = "Eve", Age = 35 }
+new User { Id = 5, Name = "Eve", Age = 35 },
+new User { Id = 6, Name = "Frank", Age = 19 },
+new User { Id = 7, Name = "Grace", Age = 41 }
 };
+
     }
 
     private async Task AddUser()
@@ -53,11 +71,18 @@ new User { Id = 5, Name = "Eve", Age = 35 }
             await JS.InvokeVoidAsync("alert", "名前を入力してください");
         }
     }
+    private string GetAgeGroup(int age)
+    {
+        if (age < 20) return "10代";
+        if (age < 30) return "20代";
+        if (age < 40) return "30代";
+        return "40代以上";
+    }
+
     public class User
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int Age { get; set; }
     }
-
 }
