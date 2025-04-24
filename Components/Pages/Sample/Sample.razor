@@ -55,7 +55,16 @@ new User { Id = 7, Name = "Grace", Age = 41 }
 };
 
     }
-
+    /// <summary>
+    /// メソッドの概要: 挨拶の出力
+    /// </summary>
+    /// <remarks>【補足】メンバ・プロパティの説明</remarks>
+    /// <param name="greet">引数の説明（name属性の命名は揃える必要がある）</param>
+    /// <returns>挨拶文</returns>
+    private string hello(string greet)
+    {
+        return $"今日の挨拶は、{greet} です";
+    }
     private async Task AddUser()
     {
         if (!string.IsNullOrWhiteSpace(newUserName) && newUserAge >= 0)
